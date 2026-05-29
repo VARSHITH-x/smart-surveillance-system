@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+
+# YOLO model (too large for GitHub)
+models/
+
+# Generated files
+static/screenshots/
+static/videos/
+logs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test codec file
+static/videos/_test.mp4

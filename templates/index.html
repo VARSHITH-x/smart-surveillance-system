@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Surveillance</title>
+  <meta http-equiv="refresh" content="10">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh}
+
+    header{
+      background:#161b22;border-bottom:1px solid #30363d;
+      padding:14px 24px;display:flex;
+      align-items:center;justify-content:space-between;
+    }
+    header h1{font-size:1.1rem;color:#58a6ff;letter-spacing:1px}
+    .badge{
+      background:#da3633;color:#fff;font-size:0.75rem;
+      font-weight:700;padding:4px 12px;border-radius:20px;
+      animation:pulse 1.5s infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    .grid{
+      display:grid;grid-template-columns:2fr 1fr;
+      gap:14px;padding:16px;max-width:1300px;margin:0 auto;
+    }
+
+    .card{background:#161b22;border:1px solid #30363d;border-radius:8px;overflow:hidden}
+    .card-title{
+      padding:10px 16px;border-bottom:1px solid #30363d;
+      font-size:0.75rem;font-weight:600;color:#8b949e;
+      text-transform:uppercase;letter-spacing:1px;
+    }
+    .card-body{padding:16px}
+
+    /* live feed */
+    .feed{grid-column:1}
+    .feed img{width:100%;border-radius:4px;display:block}
+
+    /* status */
+    .status{grid-column:2}
+    .state-pill{
+      display:inline-block;padding:6px 16px;border-radius:6px;
+      font-weight:700;font-size:.95rem;margin-bottom:14px;
+    }
+    .IDLE     {background:#1a4731;color:#3fb950}
+    .DETECTING{background:#3d2800;color:#f0883e}
+    .ALERT    {background:#3d0000;color:#f85149}
+    .COOLDOWN {background:#2d0f3d;color:#bc8cff}
+
+    .row{
+      display:flex;justify-content:space-between;
+      padding:8px 0;border-bottom:1px solid #21262d;font-size:.9rem;
+    }
+    .row:last-child{border:none}
+    .lbl{color:#8b949e}
+    .val{font-weight:600}
+    .red{color:#f85149}.green{color:#3fb950}.orange{color:#f0883e}
+
+    /* alerts table */
+    .full{grid-column:1/-1}
+    table{width:100%;border-collapse:collapse;font-size:.87rem}
+    thead tr{background:#21262d;color:#8b949e;font-size:.74rem;text-transform:uppercase}
+    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #21262d}
+    tbody tr:hover{background:#1c2128}
+    tbody tr:last-child td{border:none}
+
+    .btn{
+      display:inline-block;padding:4px 10px;border-radius:4px;
+      font-size:.78rem;font-weight:600;text-decoration:none;margin-right:4px;
+    }
+    .blue {background:#1f4068;color:#58a6ff}
+    .grn  {background:#1a4731;color:#3fb950}
+    .gray {background:#21262d;color:#8b949e}
+
+    .empty{text-align:center;color:#484f58;padding:32px;font-size:.9rem}
+    .footer{text-align:center;color:#484f58;font-size:.74rem;padding:12px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⬡ Smart Surveillance Dashboard</h1>
+  <span class="badge">● LIVE</span>
+</header>
+
+<div class="grid">
+
+  <!-- Live Feed -->
+  <div class="card feed">
+    <div class="card-title">Live Camera Feed</div>
+    <div style="padding:0">
+      <img src="/video_feed" alt="Live feed loading..."/>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="card status">
+    <div class="card-title">System Status</div>
+    <div class="card-body">
+
+      <div class="state-pill {{ system_state }}">{{ system_state }}</div>
+
+      <div class="row">
+        <span class="lbl">Persons Detected</span>
+        <span class="val {% if person_count > 0 %}orange{% else %}green{% endif %}">
+          {{ person_count }}
+        </span>
+      </div>
+      <div class="row">
+        <span class="lbl">Session Alerts</span>
+        <span class="val {% if alert_count > 0 %}red{% else %}green{% endif %}">
+          {{ alert_count }}
+        </span>
+      </div>
+      <div class="row">
+        <span class="lbl">Total in Database</span>
+        <span class="val">{{ total_db_alerts }}</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Today's Alerts</span>
+        <span class="val">{{ todays_alerts }}</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Recording</span>
+        <span class="val {% if is_recording %}red{% else %}green{% endif %}">
+          {% if is_recording %}● REC{% else %}Standby{% endif %}
+        </span>
+      </div>
+      <div class="row">
+        <span class="lbl">Auto Refresh</span>
+        <span class="val">Every 10s</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Alerts Table -->
+  <div class="card full">
+    <div class="card-title">Recent Alerts</div>
+
+    {% if alerts %}
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Timestamp</th><th>Persons</th>
+          <th>Screenshot</th><th>Video</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in alerts %}
+        <tr>
+          <td>{{ a.id }}</td>
+          <td>{{ a.timestamp }}</td>
+          <td>{{ a.person_count }}</td>
+          <td>
+            {% if a.screenshot_path %}
+              <a class="btn blue" href="/{{ a.screenshot_path }}" target="_blank">View</a>
+            {% else %}
+              <span class="btn gray">None</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if a.video_path %}
+              <a class="btn grn" href="/{{ a.video_path }}" target="_blank">Play</a>
+            {% else %}
+              <span class="btn gray">None</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div class="empty">No alerts yet. System is monitoring...</div>
+    {% endif %}
+  </div>
+
+</div>
+
+<div class="footer">Auto-refreshes every 10 seconds</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+opencv-python
+ultralytics
+flask
+numpy
+Pillow
+EOF
