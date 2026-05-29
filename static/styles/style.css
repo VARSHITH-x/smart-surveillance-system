@@ -1,0 +1,354 @@
+/* static/styles/style.css */
+/* All visual styling lives here. */
+
+/* ── Reset & base ── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+}
+
+/* ── Navbar ── */
+.navbar {
+    background-color: #1a1d2e;
+    border-bottom: 2px solid #e53e3e;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* The red blinking dot — indicates system is live */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #e53e3e;
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+    display: inline-block;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+}
+
+.navbar-links a {
+    color: #a0aec0;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+    color: #fff;
+    background-color: #e53e3e22;
+}
+
+/* ── Main layout ── */
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+/* ── Status cards row ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #1a1d2e;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.stat-card .label {
+    font-size: 0.8rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-card .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-card.danger  { border-left: 4px solid #e53e3e; }
+.stat-card.success { border-left: 4px solid #38a169; }
+.stat-card.info    { border-left: 4px solid #3182ce; }
+
+/* ── Two-column grid (feed + alerts) ── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Panel / card container ── */
+.panel {
+    background: #1a1d2e;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #2d3748;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-body {
+    padding: 1.2rem;
+}
+
+/* ── Live feed placeholder ── */
+.feed-placeholder {
+    background: #0d0f18;
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.feed-placeholder .feed-icon {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+/* The actual video feed (shown when friend's module connects) */
+.live-feed {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+/* ── Alert cards ── */
+.alert-card {
+    background: #12141f;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+}
+
+.alert-card:hover { border-color: #e53e3e55; }
+
+.alert-badge {
+    background: #e53e3e22;
+    color: #fc8181;
+    border: 1px solid #e53e3e44;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.alert-info { flex: 1; }
+
+.alert-info .alert-type {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+}
+
+.alert-info .alert-time {
+    font-size: 0.78rem;
+    color: #718096;
+    margin-top: 2px;
+}
+
+/* ── Logs table ── */
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.logs-table th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    color: #718096;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #2d3748;
+}
+
+.logs-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #1a1d2e;
+    color: #e2e8f0;
+}
+
+.logs-table tr:hover td { background: #1a1d2e; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+/* ── Badge ── */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-danger  { background: #e53e3e22; color: #fc8181; }
+.badge-success { background: #38a16922; color: #68d391; }
+.badge-info    { background: #3182ce22; color: #63b3ed; }
+
+/* ── Button ── */
+.btn {
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn:hover   { opacity: 0.85; }
+.btn-danger  { background: #e53e3e; color: #fff; }
+.btn-outline { background: transparent; color: #a0aec0; border: 1px solid #2d3748; }
+/* Add to the bottom of style.css */
+
+/* ── Media cards ── */
+.media-card {
+    background: #12141f;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0.6rem;
+    transition: border-color 0.2s;
+}
+
+.media-card:hover {
+    border-color: #3182ce55;
+}
+/* ── Responsive navbar for smaller screens ── */
+@media (max-width: 700px) {
+    .navbar { flex-direction: column; height: auto; padding: 0.8rem 1rem; gap: 0.5rem; }
+    .navbar-links { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Scrollable alerts panel ── */
+#recent-alerts-container {
+    max-height: 380px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #2d3748 transparent;
+}
+
+/* ── Confidence bar inside alert cards ── */
+.confidence-bar-wrap {
+    background: #1a1d2e;
+    border-radius: 4px;
+    height: 4px;
+    width: 60px;
+    overflow: hidden;
+}
+
+.confidence-bar {
+    height: 100%;
+    background: #e53e3e;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* ── System uptime counter ── */
+.uptime-text {
+    font-size: 0.78rem;
+    color: #718096;
+    margin-left: auto;
+    padding: 0 1rem;
+}
+
+/* ── Loading shimmer for cards ── */
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #1a1d2e 25%, #2d3748 50%, #1a1d2e 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 6px;
+    height: 20px;
+}

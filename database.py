@@ -1,4 +1,4 @@
-# database.py
+# database.py — UNIFIED
 import sqlite3
 import os
 from datetime import datetime
@@ -40,7 +40,7 @@ def initialize_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS daily_stats (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            date          TEXT    UNIQUE NOT NULL,
+            date          TEXT UNIQUE NOT NULL,
             total_alerts  INTEGER DEFAULT 0,
             total_persons INTEGER DEFAULT 0
         )
@@ -48,7 +48,7 @@ def initialize_database():
 
     conn.commit()
     conn.close()
-    print(f"[DB] Database ready at: {DATABASE_PATH}")
+    print(f"[DB] Ready → {DATABASE_PATH}")
 
 
 def log_alert(timestamp, person_count, screenshot_path=None,
@@ -138,17 +138,3 @@ def get_dashboard_stats():
         "todays_alerts": len(get_todays_alerts()),
         "recent_alerts": get_recent_alerts(10),
     }
-
-
-# ── TEST ──────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    initialize_database()
-    id1 = log_alert("2024-01-15 14:30:00", 1, "static/screenshots/test.jpg")
-    log_system_event("INFO", "Test event")
-    update_daily_stats(1)
-    print("\nRecent alerts:")
-    for a in get_recent_alerts():
-        print(f"  {dict(a)}")
-    print(f"\nTotal: {get_alert_count()}")
-    print(f"DB file exists: {os.path.exists(DATABASE_PATH)}")
-    print("[TEST] database.py OK")
